@@ -11,6 +11,7 @@ client/debug.log
 
 # environment variables
 .env
+client/.env
 
 # OS files
 .DS_Store
