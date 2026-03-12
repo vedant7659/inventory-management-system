@@ -17,7 +17,6 @@
 },
 
 "author": "Vedant Agrawal",
-"license": "MIT",
 
 "dependencies": {
 "bcryptjs": "^2.4.3",
