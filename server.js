@@ -4,39 +4,52 @@ const bodyParser = require("body-parser");
 
 const app = express();
 
-// middleware port
-var corsOptions = {
+// CORS configuration
+const corsOptions = {
   origin: "http://localhost:3000",
 };
 
 app.use(cors(corsOptions));
 
-// parse requests of content type json
+// Middleware for parsing requests
 app.use(bodyParser.json());
-
-// parse requests of content type x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// database sync
+// Database setup
 const db = require("./app/models");
 const Role = db.role;
-var bcrypt = require("bcryptjs");
 const User = db.user;
 const UserRole = db.user_roles;
+
+const bcrypt = require("bcryptjs");
+
+// Sync database
 db.sequelize.sync();
 
-/* Reset database - Delete all records */
-// db.sequelize.sync({ force: true }).then(() => {
-//   console.log("Drop and Resync Db");
-//   initial(db.sequelize);
-// });
+/* Reset database if needed */
+/*
+db.sequelize.sync({ force: true }).then(() => {
+  console.log("Database reset completed.");
+  initial(db.sequelize);
+});
+*/
 
-// test route
+// Root route
 app.get("/", (req, res) => {
-  res.json({ message: "InvSys Server Running..." });
+  res.json({
+    message: "Inventory Management System API running successfully.",
+  });
 });
 
-// routes
+// Health check endpoint
+app.get("/api/health", (req, res) => {
+  res.status(200).json({
+    status: "OK",
+    service: "Inventory Management System API",
+  });
+});
+
+// Routes
 require("./app/routes/auth.routes")(app);
 require("./app/routes/user.routes")(app);
 require("./app/routes/item.routes")(app);
@@ -54,11 +67,15 @@ require("./app/routes/issued-stud-item.routes")(app);
 require("./app/routes/proceeded-aca-service.routes")(app);
 require("./app/routes/proceeded-stud-service.routes")(app);
 
-// port 5000 for the server
+// Server port
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server listening on port ${PORT}.`));
 
-// create roles in database
+// Start server
+app.listen(PORT, () => {
+  console.log(`Inventory Management System server running on port ${PORT}`);
+});
+
+// Initialize roles and default admin
 function initial(sequelize) {
   Role.create({
     id: 1,
@@ -81,18 +98,29 @@ function initial(sequelize) {
   });
 
   User.create({
-    username: "admin",
-    password: bcrypt.hashSync("admin", 8),
+    username: "system_admin",
+    password: bcrypt.hashSync("admin123", 8),
   });
 
   UserRole.create({
     roleId: 1,
-    username: "admin",
+    username: "system_admin",
   });
 
-  sequelize.query("ALTER TABLE issued_aca_item_requests ADD FOREIGN KEY (requestId) REFERENCES academic_item_requests (requestId);");
-  sequelize.query("ALTER TABLE proceeded_aca_service_requests ADD FOREIGN KEY (requestId) REFERENCES academic_service_requests (requestId);");
+  // Foreign key relationships
+  sequelize.query(
+    "ALTER TABLE issued_aca_item_requests ADD FOREIGN KEY (requestId) REFERENCES academic_item_requests (requestId);"
+  );
 
-  sequelize.query("ALTER TABLE issued_stud_item_requests ADD FOREIGN KEY (requestId) REFERENCES reviewed_item_requests (requestId);");
-  sequelize.query("ALTER TABLE proceeded_stud_service_requests ADD FOREIGN KEY (requestId) REFERENCES reviewed_service_requests (requestId);");
+  sequelize.query(
+    "ALTER TABLE proceeded_aca_service_requests ADD FOREIGN KEY (requestId) REFERENCES academic_service_requests (requestId);"
+  );
+
+  sequelize.query(
+    "ALTER TABLE issued_stud_item_requests ADD FOREIGN KEY (requestId) REFERENCES reviewed_item_requests (requestId);"
+  );
+
+  sequelize.query(
+    "ALTER TABLE proceeded_stud_service_requests ADD FOREIGN KEY (requestId) REFERENCES reviewed_service_requests (requestId);"
+  );
 }
