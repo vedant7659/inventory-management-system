@@ -1,52 +1,36 @@
 # Inventory Management System
 
-A full-stack inventory management web application designed to manage products, track stock levels, and perform CRUD operations efficiently.
+A full-stack inventory management system built using **Node.js, Express, MySQL, and React**.
 
 ## Features
-
-- Add, update, and delete products
-- Track product quantity in inventory
-- RESTful API based backend
-- MySQL database integration
-- Clean client-server architecture
+- User authentication (JWT)
+- Role-based access control
+- Item and service management
+- Student and academic request workflows
+- Inventory tracking
 
 ## Tech Stack
+Backend:
+- Node.js
+- Express
+- Sequelize
+- MySQL
 
 Frontend:
 - React
-- HTML5
-- CSS3
-- JavaScript
-
-Backend:
-- Node.js
-- Express.js
-
-Database:
-- MySQL
-
-Tools:
-- Git
-- Postman
 
 ## Installation
 
-1. Clone the repository
+Clone the repository
 
-git clone https://github.com/vedant7659/inventory-management-system
+git clone https://github.com/vedant7659/inventory-management-system.git
 
-2. Install dependencies
+Install dependencies
 
 npm install
+cd client
+npm install
 
-3. Configure MySQL database
+Run the project
 
-4. Start the server
-
-npm start
-
-## Future Improvements
-
-- Authentication and role-based access
-- Inventory analytics dashboard
-- Product search and filtering
+npm run dev
