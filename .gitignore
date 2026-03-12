@@ -1,2 +1,29 @@
-node_modules
+# dependencies
+node_modules/
+client/node_modules/
+
+# logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 client/debug.log
+
+# environment variables
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# build folders
+dist/
+build/
+client/build/
+
+# IDE files
+.vscode/
+.idea/
+
+# coverage reports
+coverage/
