@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
@@ -46,10 +48,11 @@ app.get("/api/health", (req, res) => {
   res.status(200).json({
     status: "OK",
     service: "Inventory Management System API",
+    timestamp: new Date(),
   });
 });
 
-// Routes
+// API Routes
 require("./app/routes/auth.routes")(app);
 require("./app/routes/user.routes")(app);
 require("./app/routes/item.routes")(app);
@@ -66,6 +69,10 @@ require("./app/routes/issued-aca-item.routes")(app);
 require("./app/routes/issued-stud-item.routes")(app);
 require("./app/routes/proceeded-aca-service.routes")(app);
 require("./app/routes/proceeded-stud-service.routes")(app);
+
+// Global error handler middleware
+const errorHandler = require("./app/middleware/errorHandler");
+app.use(errorHandler);
 
 // Server port
 const PORT = process.env.PORT || 5000;
